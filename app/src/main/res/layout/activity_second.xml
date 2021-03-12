@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textAlignment="center"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
         tools:text="test aja" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

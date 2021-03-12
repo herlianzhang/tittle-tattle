@@ -14,9 +14,10 @@ class SecondActivity : AppCompatActivity() {
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mModel = intent.getParcelableExtra<MyModel>(KEY)
-        binding.tvMain.text = mModel?.message
+        val mModel = intent.getParcelableExtra<MyModel>(KEY) //ciptakan objek sesuai dengan data class yang didapat dari mainactivity
+        binding.tvMain.text = mModel?.message // menampilkan text sesuai data class ke object
     }
 }
 
+//Key extra untuk data class MyModel
 const val KEY = "KEY"

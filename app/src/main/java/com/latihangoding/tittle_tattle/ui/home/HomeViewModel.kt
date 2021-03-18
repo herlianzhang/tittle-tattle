@@ -16,16 +16,20 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRep: HomeRepository) : ViewModel() {
 
+    // penampung untuk live data dengan model MyModel
     private val _mData = MutableLiveData<Resource<MyModel>>()
     val mData: LiveData<Resource<MyModel>>
         get() = _mData
 
+    // menjalan fungsi getEntries saat viewmodel diciptakan
     init {
         getEntries()
     }
 
     private fun getEntries() {
-        viewModelScope.launch(Dispatchers.IO) { // INI THREAD NYA
+        // menjalankan perintah di thread i/o
+        viewModelScope.launch(Dispatchers.IO) {
+            // mengambil data dari api secara konkurensi
             homeRep.getEntries().collect {
                 _mData.postValue(it)
             }

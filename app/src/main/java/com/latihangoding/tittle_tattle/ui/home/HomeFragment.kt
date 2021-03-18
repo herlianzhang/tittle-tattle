@@ -13,18 +13,23 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() { // INI INI FRAGMENTNYA
+class HomeFragment : Fragment() {
 
+    // binding fragmenthomebinding
     private lateinit var binding: FragmentHomeBinding
+    // view model
     private val viewModel: HomeViewModel by viewModels()
 
+    // menciptakan objek homeadapter
     private val mAdapter = HomeAdapter()
 
+    // ketika fragment create view
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // assign binding fragment ke xml fragment_home
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         initAdapter()
@@ -33,10 +38,12 @@ class HomeFragment : Fragment() { // INI INI FRAGMENTNYA
     }
 
     private fun initAdapter() {
+        // set adapter ke recycler view dengan id rvMain
         binding.rvMain.adapter = mAdapter
     }
 
     private fun initObserver() {
+        // megobservasi data ketika ada perubahan data
         viewModel.mData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.SUCCESS -> {

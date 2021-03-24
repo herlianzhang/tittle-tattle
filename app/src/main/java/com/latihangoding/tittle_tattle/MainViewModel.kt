@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
+
     private val _myData = MutableLiveData<MyModel>()
     val myData: LiveData<MyModel>
         get() = _myData

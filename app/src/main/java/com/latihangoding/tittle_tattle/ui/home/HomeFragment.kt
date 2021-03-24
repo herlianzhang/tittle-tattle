@@ -31,7 +31,6 @@ class HomeFragment : Fragment() {
     ): View {
         // assign binding fragment ke xml fragment_home
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         initAdapter()
         initObserver()
         return binding.root

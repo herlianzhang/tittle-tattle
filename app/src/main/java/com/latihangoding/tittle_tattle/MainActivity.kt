@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.latihangoding.tittle_tattle.broadcast.AirPlaneReceiver
 import com.latihangoding.tittle_tattle.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 

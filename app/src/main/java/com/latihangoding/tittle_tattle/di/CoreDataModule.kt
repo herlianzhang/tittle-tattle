@@ -1,5 +1,6 @@
 package com.latihangoding.tittle_tattle.di
 
+import android.app.Application
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.latihangoding.tittle_tattle.BuildConfig
@@ -26,7 +27,7 @@ class CoreDataModule {
     fun provideLoggingInterceptor() =
         HttpLoggingInterceptor().apply {
             level =
-                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+                if (false) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
 
     @Provides

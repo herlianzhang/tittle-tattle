@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentHomeBinding
 import com.latihangoding.tittle_tattle.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +19,7 @@ class HomeFragment : Fragment() {
 
     // binding fragmenthomebinding
     private lateinit var binding: FragmentHomeBinding
+
     // view model
     private val viewModel: HomeViewModel by viewModels()
 
@@ -31,12 +34,21 @@ class HomeFragment : Fragment() {
     ): View {
         // assign binding fragment ke xml fragment_home
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        initAdapter()
+
+        setupAdapter()
+        initListener()
         initObserver()
+
         return binding.root
     }
 
-    private fun initAdapter() {
+    private fun initListener() {
+        binding.fab.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_galleryFragment)
+        }
+    }
+
+    private fun setupAdapter() {
         // set adapter ke recycler view dengan id rvMain
         binding.rvMain.adapter = mAdapter
     }

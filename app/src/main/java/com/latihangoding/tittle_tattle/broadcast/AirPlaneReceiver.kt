@@ -1,4 +1,4 @@
-package com.latihangoding.tittle_tattle
+package com.latihangoding.tittle_tattle.broadcast
 
 import android.content.BroadcastReceiver
 import android.content.Context

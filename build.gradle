@@ -7,6 +7,8 @@ buildscript {
         coroutine_version = "1.4.2"
         apollo_version = "2.2.0"
         stetho_version = "1.5.1"
+        room_version = '2.2.6'
+        glide_version = '4.11.0'
     }
     repositories {
         google()

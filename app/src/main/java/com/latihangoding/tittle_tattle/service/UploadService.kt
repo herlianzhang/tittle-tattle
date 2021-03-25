@@ -22,11 +22,13 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+
 @AndroidEntryPoint
-class UploadService : JobIntentService(), ProgressListener {
+class UploadService : JobIntentService(), ProgressListener { // menginheritance progresslistener untuk progress upload
     @Inject
     lateinit var galleryRepository: GalleryRepository
 
+//    membuat notifikasi upload
     private val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
         setContentTitle("Picture Upload")
         setContentText("Upload in progress")
@@ -38,6 +40,7 @@ class UploadService : JobIntentService(), ProgressListener {
 
     lateinit var notificationManager: NotificationManagerCompat
 
+//   thread
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
@@ -45,6 +48,7 @@ class UploadService : JobIntentService(), ProgressListener {
         scope.launch {
             Toast.makeText(this@UploadService, "Uploading", Toast.LENGTH_SHORT).show()
         }
+//        mengirim broadcast untuk disable button
         sendBroadcast(Intent(buttonStatus).also {
             it.putExtra(isButtonEnable, false)
         })
@@ -76,6 +80,7 @@ class UploadService : JobIntentService(), ProgressListener {
         }
     }
 
+//    notifikasi ketika download telah berhasil
     override fun onSuccess(gallery: GalleryModel?) {
         val data = gallery?.copy(addedDate = System.currentTimeMillis()) ?: return
 
@@ -86,24 +91,28 @@ class UploadService : JobIntentService(), ProgressListener {
                 .setProgress(0, 0, false)
             notify(notificationId, builder.build())
         }
+    //        mengirim broadcast untuk enable button
         sendBroadcast(Intent(buttonStatus).also {
             it.putExtra(isButtonEnable, true)
         })
         Timber.d("Masuk success $data")
     }
 
+//    notifikasi ketika download fail
     override fun onFail(message: String?) {
         notificationManager.apply {
             builder.setContentText("Download Fail")
                 .setProgress(0, 0, false)
             notify(notificationId, builder.build())
         }
+    //        mengirim broadcast untuk enable button
         sendBroadcast(Intent(buttonStatus).also {
             it.putExtra(isButtonEnable, true)
         })
         Timber.e("Masuk fail $message")
     }
 
+//    membuat sebuah notifikasi channel
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mChannel = NotificationChannel(
@@ -119,6 +128,7 @@ class UploadService : JobIntentService(), ProgressListener {
         }
     }
 
+//    objek untuk android oreo, jika diatas android oreo tidak perlu membuat notifikasi channel
     companion object {
         const val JOB_ID = 2
         const val CHANNEL_ID = "channel_id"

@@ -12,25 +12,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor(private val galleryRep: GalleryRepository) : ViewModel(),
-    ProgressListener {
+class GalleryViewModel @Inject constructor(private val galleryRep: GalleryRepository) :
+    ViewModel() {
     val galleryList = galleryRep.getGalleryList
-
-    fun upload(uri: Uri) {
-        viewModelScope.launch {
-            galleryRep.upload(uri, this@GalleryViewModel)
-        }
-    }
-
-    override fun onProgress(progress: Float) {
-        Timber.d("Masuk progress $progress")
-    }
-
-    override fun onSuccess(gallery: GalleryModel?) {
-        Timber.d("Masuk success $gallery")
-    }
-
-    override fun onFail(message: String?) {
-        Timber.e("Masuk fail $message")
-    }
 }

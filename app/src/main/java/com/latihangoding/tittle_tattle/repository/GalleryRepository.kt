@@ -22,8 +22,10 @@ class GalleryRepository @Inject constructor(
 ) {
     private var job: Job? = null
 
+//    mengambil list data dari database
     val getGalleryList = galleryDao.getAllGallery()
 
+//    melakukan upload file dari gallery ke database menggunakan REST API, untuk menyimpan data yang telah diupload ke apk
     suspend fun upload(uri: Uri, listener: ProgressListener) {
         val progressListener = InputStreamRequestBody(
             contentType = "image/jpg".toMediaTypeOrNull(),
@@ -69,6 +71,7 @@ class GalleryRepository @Inject constructor(
         job = null
     }
 
+//masukkan gallery ke database
     fun insertGallery(data: GalleryModel) {
         galleryDao.insertGallery(data)
     }

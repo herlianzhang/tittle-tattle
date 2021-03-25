@@ -18,36 +18,40 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
-    private val airPlainStateReceiver = object : BroadcastReceiver() {
+//    objek ketika menerima state airplane mode
+    private val airPlaneStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+//            ketika airplane hidup maka akan menampilkan UI bahwa airplane dalam keadaan hidup
             val isAirPlaneOn = intent?.getBooleanExtra(AirPlaneReceiver.isAirPlaneOn, false)
             binding.llMain.isVisible = isAirPlaneOn == true
         }
     }
 
-    private val airPlainReceiver = AirPlaneReceiver()
+    private val airPlaneReceiver = AirPlaneReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+// mendaftarkan broadcast receiver bahwa untuk menerima perubahan status airplane
         registerReceiver(
-            airPlainReceiver,
+            airPlaneReceiver,
             IntentFilter().also {
                 it.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
             }
         )
-
+// mendaftarkan receiver state airplane mode sehingga dapat menerima perubahan yang terjadi pada fitur airplane
         registerReceiver(
-            airPlainStateReceiver,
+            airPlaneStateReceiver,
             IntentFilter(AirPlaneReceiver.airPlainState)
         )
     }
 
+//    ketika menghancurkan main activity, unregister fitur airplane
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(airPlainReceiver)
-        unregisterReceiver(airPlainStateReceiver)
+        unregisterReceiver(airPlaneReceiver)
+        unregisterReceiver(airPlaneStateReceiver)
     }
 }

@@ -47,12 +47,14 @@ class GalleryFragment : Fragment() {
         }
     }
 
+// untuk menerima broadcast receiver yang terjadi perubahan di proses sehinga mengubah status button tersebut
     private val buttonStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val isButtonEnable = intent?.getBooleanExtra(UploadService.isButtonEnable, true)
             binding.fab.isEnabled = isButtonEnable == true
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -91,6 +93,7 @@ class GalleryFragment : Fragment() {
         return binding.root
     }
 
+//    mengunregister receiver button status ketika fragment dihancurkan
     override fun onDestroy() {
         super.onDestroy()
         requireContext().unregisterReceiver(buttonStatusReceiver)
@@ -101,16 +104,18 @@ class GalleryFragment : Fragment() {
     }
 
     private fun initListener() {
+//  untuk kembali ke fragment sebelumnya
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
+//        request permission kemudian membuka gallery untuk mengambil gambar
         binding.fab.setOnClickListener {
             requestPermission()
         }
     }
 
     private fun initObserver() {
+//        ketika menerima update dari database (room) kemudian menampilkan data tersebut di recycle view
         viewModel.galleryList.observe(viewLifecycleOwner) {
             binding.tvNoData.isVisible = it.isEmpty()
             galleryAdapter.submitList(it)
@@ -139,6 +144,7 @@ class GalleryFragment : Fragment() {
         }
     }
 
+//    setelah permission telah didapat, akan memanggil fungsinya untuk mengambil foto dari gallery
     private fun pickImageFromGallery() {
         //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)

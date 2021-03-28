@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:gravity="top"
+        tools:text="Progress" />
+
+    <ProgressBar
+        android:id="@+id/pb_main"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_margin="12dp"
+        tools:progress="24" />
+
+    <Button
+        android:id="@+id/button_cancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pb_main"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="12dp"
+        android:text="@string/cancle" />
+
+    <ImageView
+        android:id="@+id/iv_main"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/button_cancle"
+        android:scaleType="centerCrop"
+        android:src="@color/teal_200"
+        android:visibility="gone" />
+
+</RelativeLayout>

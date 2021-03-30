@@ -14,12 +14,9 @@ import android.widget.Toast
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import androidx.navigation.NavDeepLinkBuilder
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.bumptech.glide.request.transition.Transition
 import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.api.ProgressListener
@@ -45,8 +42,7 @@ class UploadService : JobIntentService(),
     private lateinit var notificationView: RemoteViews
     private lateinit var builder: NotificationCompat.Builder
 
-
-    lateinit var notificationManager: NotificationManagerCompat
+    private lateinit var notificationManager: NotificationManagerCompat
 
     //   thread
     private val job = SupervisorJob()
@@ -61,7 +57,15 @@ class UploadService : JobIntentService(),
             setOnlyAlertOnce(true)
             setSmallIcon(R.drawable.ic_baseline_cloud_download_24)
             priority = NotificationCompat.PRIORITY_HIGH
+            setContentIntent(pendingIntent())
         }
+    }
+
+    private fun pendingIntent(): PendingIntent {
+        return NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.galleryFragment)
+            .createPendingIntent()
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -77,10 +81,6 @@ class UploadService : JobIntentService(),
         notificationManager = NotificationManagerCompat.from(this).apply {
 //            builder.setProgress(100, 0, false)
             notificationView.setTextViewText(R.id.tv_title, "Progress")
-            notificationView.setOnClickPendingIntent(
-                R.id.button_cancle,
-                PendingIntent.getBroadcast(this@UploadService, cancleUpload, Intent(), 0)
-            )
             notify(notificationId, builder.build())
         }
 
@@ -124,7 +124,6 @@ class UploadService : JobIntentService(),
             notificationView.setTextViewText(R.id.tv_title, "Success")
             notificationView.setViewVisibility(R.id.iv_main, View.VISIBLE)
             notificationView.setViewVisibility(R.id.pb_main, View.GONE)
-            notificationView.setViewVisibility(R.id.button_cancle, View.GONE)
 
             Glide.with(this@UploadService).asBitmap().load(gallery.imgPath)
                 .into(object : CustomTarget<Bitmap>() {
@@ -186,12 +185,11 @@ class UploadService : JobIntentService(),
 
     //    objek untuk android oreo, jika diatas android oreo tidak perlu membuat notifikasi channel
     companion object {
-        const val JOB_ID = 2
+        private const val JOB_ID = 2
         const val CHANNEL_ID = "channel_id"
         const val notificationId = 10
         const val buttonStatus = "button_status"
         const val isButtonEnable = "is_button_enable"
-        const val cancleUpload = 11
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, UploadService::class.java, JOB_ID, intent)
         }

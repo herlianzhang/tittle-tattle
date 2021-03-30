@@ -3,10 +3,11 @@
     package="com.latihangoding.tittle_tattle">
 
 
-<!--    diperlukan permission internet, gallery storage, dan wake lock-->
+    <!--    diperlukan permission internet, gallery storage, dan wake lock-->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -20,7 +21,7 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-<!--        ketika terjadi airplane mode ditekan, apk akan menerima aksi tersebut-->
+        <!--        ketika terjadi airplane mode ditekan, apk akan menerima aksi tersebut-->
         <receiver
             android:name=".broadcast.AirPlaneReceiver"
             android:enabled="true"
@@ -31,6 +32,9 @@
         </receiver>
 
         <activity android:name=".MainActivity">
+
+            <nav-graph android:value="@navigation/nav_graph" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

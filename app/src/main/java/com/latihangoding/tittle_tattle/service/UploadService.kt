@@ -51,13 +51,13 @@ class UploadService : JobIntentService(),
     override fun onCreate() {
         super.onCreate()
         notificationView = RemoteViews(packageName, R.layout.notification_view)
+        notificationView.setOnClickPendingIntent(R.id.button_go_to_gallery, pendingIntent())
         builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setStyle(NotificationCompat.DecoratedCustomViewStyle())
             setCustomContentView(notificationView)
             setOnlyAlertOnce(true)
             setSmallIcon(R.drawable.ic_baseline_cloud_download_24)
             priority = NotificationCompat.PRIORITY_HIGH
-            setContentIntent(pendingIntent())
         }
     }
 

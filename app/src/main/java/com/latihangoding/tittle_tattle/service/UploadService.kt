@@ -51,6 +51,7 @@ class UploadService : JobIntentService(),
     override fun onCreate() {
         super.onCreate()
         notificationView = RemoteViews(packageName, R.layout.notification_view)
+//        membuat aksi notifikasi ketika ditekan, yaitu menuju gallery ketika upload selesai
         notificationView.setOnClickPendingIntent(R.id.button_go_to_gallery, pendingIntent())
         builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setStyle(NotificationCompat.DecoratedCustomViewStyle())
@@ -61,6 +62,7 @@ class UploadService : JobIntentService(),
         }
     }
 
+//    berfungsi untuk berpindah ke fragment gallery
     private fun pendingIntent(): PendingIntent {
         return NavDeepLinkBuilder(this)
             .setGraph(R.navigation.nav_graph)

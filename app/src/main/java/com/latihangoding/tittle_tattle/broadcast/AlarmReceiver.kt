@@ -21,17 +21,25 @@ class AlarmReceiver : BroadcastReceiver() {
             name,
             importance
         )
+
+//        membuat notification builder ketika notifikasi muncul
         val mBuilder = NotificationCompat.Builder(context!!, channel_id)
             .setSmallIcon(R.drawable.ic_notif)
             .setContentText("Ayo Buka kembali aplikasi ini dan nikmati keseruannya")
             .setContentTitle("Alarm Manager")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+
         val mNotificationManager = context
             .getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
+
+//        menghapus semua notification yang ada
         for (s in mNotificationManager.notificationChannels) {
             mNotificationManager.deleteNotificationChannel(s.id)
         }
+
+//        membuat notification channel dan notify notification
         mNotificationManager.createNotificationChannel(nNotifyChannel)
         mNotificationManager.notify(notifyid, mBuilder.build())
     }

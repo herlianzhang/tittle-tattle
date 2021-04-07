@@ -54,10 +54,13 @@ class TimerFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+//        melaukan aksi ketika button ditekan
         binding.smAlarm.setOnCheckedChangeListener { v, isChecked ->
             if (v.isPressed) {
                 val alarmManager =
                     requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+//                melakukan broadcast
                 val pendingIntent = PendingIntent.getBroadcast(
                     requireContext(),
                     101,
@@ -65,9 +68,13 @@ class TimerFragment : Fragment() {
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 if (isChecked) {
+//                    mengambil waktu saat ini
                     val alarmTimer = Calendar.getInstance()
 
-                    alarmTimer.add(Calendar.SECOND, 15)
+//                    menambah waktu saat ini dengan 5 detik
+                    alarmTimer.add(Calendar.SECOND, 5)
+
+//                    penjadwalan alarm yang berulang-ulang dengan interval 15 menit
                     alarmManager.setInexactRepeating(
                         AlarmManager.RTC,
                         alarmTimer.timeInMillis,
@@ -75,6 +82,7 @@ class TimerFragment : Fragment() {
                         pendingIntent
                     )
                 } else {
+//                    mematikan alarm bila dinonaktifkan
                     alarmManager.cancel(pendingIntent)
                     pendingIntent.cancel()
                 }
@@ -82,11 +90,13 @@ class TimerFragment : Fragment() {
             }
         }
 
+//        melakukan aksi ketika button ditekan
         binding.smScheduler.setOnCheckedChangeListener { v, isChecked ->
             if (v.isPressed) {
                 val jobWeather =
                     requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
                 if (isChecked) {
+//                    jika button sedang diaktifkan maka menjalankan job scheduler
                     val serviceComponent =
                         ComponentName(requireContext(), WeatherService::class.java)
                     val jobInfo = JobInfo.Builder(JOB_ID, serviceComponent)
@@ -97,6 +107,7 @@ class TimerFragment : Fragment() {
                         .build()
                     jobWeather.schedule(jobInfo)
                 } else {
+//                    jika button dimatikan maka mematikan job scheduler
                     jobWeather.cancel(JOB_ID)
                 }
                 viewModel.checkScheduler()

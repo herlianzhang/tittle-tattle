@@ -17,6 +17,7 @@ class WeatherRepository @Inject constructor(
         weatherDao.insertWeather(weather)
     }
 
+//    menyimpan api key dan city medan
     suspend fun fetchWeather() = getResult {
         apiService.getWeather(
             city = "Medan",

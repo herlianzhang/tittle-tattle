@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.latihangoding.tittle_tattle.vo.Weather
 
+// aksi mendapatkan data dengan melakukan perintah sql
 @Dao
 interface WeatherDao {
     @Query("SELECT * FROM weather_table ORDER BY added_date DESC")

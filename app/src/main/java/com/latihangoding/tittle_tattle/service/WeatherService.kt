@@ -21,8 +21,10 @@ class WeatherService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         Timber.d("Masuk onStartJob")
         CoroutineScope(Dispatchers.IO).launch {
+//            mengambil api key dan city untuk dipakai
             weatherRepository.fetchWeather().collect {
                 when (it) {
+//                    jika berhasil maka akan menyimpan data dan dikeluarkan di xml
                     is Resource.SUCCESS -> {
                         val data = it.data?.weathers ?: return@collect
                         for (weather in data) {
@@ -37,6 +39,7 @@ class WeatherService : JobService() {
                         Timber.d("Masuk loading pak eko")
                     }
                 }
+//                apabila job selesai, schedule ulang untuk meminta data / mengakses API
                 jobFinished(params, true)
             }
         }

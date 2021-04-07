@@ -5,7 +5,7 @@ import android.net.Uri
 import com.latihangoding.tittle_tattle.api.ApiService
 import com.latihangoding.tittle_tattle.api.InputStreamRequestBody
 import com.latihangoding.tittle_tattle.api.ProgressListener
-import com.latihangoding.tittle_tattle.db.GalleryDao
+import com.latihangoding.tittle_tattle.db.gallery.GalleryDao
 import com.latihangoding.tittle_tattle.di.UploadApi
 import com.latihangoding.tittle_tattle.vo.GalleryModel
 import dagger.hilt.android.qualifiers.ApplicationContext

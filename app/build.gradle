@@ -22,6 +22,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BASE_URL", '"https://api.publicapis.org/"'
         buildConfigField "String", "UPLOAD_URL", '"https://secure-river-11996.herokuapp.com/"'
+        buildConfigField "String", "WEATHER_URL", '"https://api.openweathermap.org/data/2.5/"'
     }
 
     buildTypes {

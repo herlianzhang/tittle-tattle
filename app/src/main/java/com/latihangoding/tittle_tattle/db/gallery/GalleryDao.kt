@@ -1,4 +1,4 @@
-package com.latihangoding.tittle_tattle.db
+package com.latihangoding.tittle_tattle.db.gallery
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

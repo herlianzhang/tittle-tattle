@@ -1,11 +1,11 @@
 package com.latihangoding.tittle_tattle.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.latihangoding.tittle_tattle.R
@@ -43,8 +43,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun initListener() {
-        binding.fab.setOnClickListener {
+        binding.fabGallery.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_galleryFragment)
+        }
+
+        binding.fabTimer.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_timerFragment)
         }
     }
 

@@ -22,11 +22,19 @@
         android:name="com.latihangoding.tittle_tattle.ui.gallery.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery">
+        <action
+            android:id="@+id/action_galleryFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
     </fragment>
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.latihangoding.tittle_tattle.ui.timer.TimerFragment"
         android:label="fragment_timer"
         tools:layout="@layout/fragment_timer" />
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="com.latihangoding.tittle_tattle.ui.media.MediaFragment"
+        android:label="fragment_media"
+        tools:layout="@layout/fragment_media" />
 
 </navigation>

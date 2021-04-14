@@ -63,6 +63,7 @@ class UploadService : JobIntentService(),
     }
 
 //    berfungsi untuk berpindah ke fragment gallery
+    // explicit deep link, ref: https://developer.android.com/guide/navigation/navigation-deep-link#explicit
     private fun pendingIntent(): PendingIntent {
         return NavDeepLinkBuilder(this)
             .setGraph(R.navigation.nav_graph)

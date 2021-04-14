@@ -17,6 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/backgrounds/scenic"
-        app:shapeAppearanceOverlay="@style/cornerImageView"/>
+        app:shapeAppearanceOverlay="@style/cornerImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

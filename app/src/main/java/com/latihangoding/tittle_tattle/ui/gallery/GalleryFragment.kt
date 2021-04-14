@@ -1,29 +1,29 @@
 package com.latihangoding.tittle_tattle.ui.gallery
 
 import android.Manifest
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.latihangoding.tittle_tattle.R
-import com.latihangoding.tittle_tattle.broadcast.AirPlaneReceiver
 import com.latihangoding.tittle_tattle.databinding.FragmentGalleryBinding
 import com.latihangoding.tittle_tattle.service.UploadService
+import com.latihangoding.tittle_tattle.ui.media.MediaFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -90,6 +90,14 @@ class GalleryFragment : Fragment() {
             IntentFilter(UploadService.buttonStatus)
         )
 
+        setFragmentResultListener(MediaFragment.REQUEST_KEY) { _, bundle ->
+            val uri = Uri.parse(bundle.getString(MediaFragment.BUNDLE_KEY))
+            val mIntent = Intent(requireContext(), UploadService::class.java).also {
+                it.data = uri
+            }
+            UploadService.enqueueWork(requireContext(), mIntent)
+        }
+
         return binding.root
     }
 
@@ -146,11 +154,13 @@ class GalleryFragment : Fragment() {
 
 //    setelah permission telah didapat, akan memanggil fungsinya untuk mengambil foto dari gallery
     private fun pickImageFromGallery() {
-        //Intent to pick image
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/jpg"
-        startForResult.launch(intent)
-    }
+    //Intent to pick image
+//        val intent = Intent(Intent.ACTION_PICK)
+//        intent.type = "image/jpg"
+//        startForResult.launch(intent)
+
+    findNavController().navigate(R.id.action_galleryFragment_to_mediaFragment)
+}
 
     companion object {
         //Permission code

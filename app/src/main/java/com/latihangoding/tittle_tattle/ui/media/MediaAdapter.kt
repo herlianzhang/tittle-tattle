@@ -6,21 +6,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.latihangoding.tittle_tattle.databinding.ItemMediaBinding
 
-class MediaAdapter : ListAdapter<Uri, MediaAdapter.ViewHolder>(DiffCallback()) {
+class MediaAdapter(private val onClickListener: OnClickListener) :
+    ListAdapter<Uri, MediaAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, onClickListener)
     }
 
-    class ViewHolder private constructor(private val binding: ItemMediaBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: ItemMediaBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Uri) {
+        fun bind(item: Uri, onClickListener: OnClickListener) {
+            Glide.with(binding.root.context).load(item).into(binding.ivMain)
 
+            binding.root.setOnClickListener {
+                onClickListener.onClick(item)
+            }
         }
 
         companion object {
@@ -31,9 +38,14 @@ class MediaAdapter : ListAdapter<Uri, MediaAdapter.ViewHolder>(DiffCallback()) {
             }
         }
     }
+
     private class DiffCallback : DiffUtil.ItemCallback<Uri>() {
         override fun areItemsTheSame(oldItem: Uri, newItem: Uri) = oldItem == newItem
 
         override fun areContentsTheSame(oldItem: Uri, newItem: Uri) = oldItem == newItem
+    }
+
+    interface OnClickListener {
+        fun onClick(uri: Uri)
     }
 }

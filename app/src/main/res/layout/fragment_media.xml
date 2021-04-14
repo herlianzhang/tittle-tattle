@@ -8,6 +8,6 @@
     android:layout_height="match_parent"
     android:padding="12dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-    app:spanCount="2"
+    app:spanCount="3"
     tools:context=".ui.media.MediaFragment"
     tools:listitem="@layout/item_media" />

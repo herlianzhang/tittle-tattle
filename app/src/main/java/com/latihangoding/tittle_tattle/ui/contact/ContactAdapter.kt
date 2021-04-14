@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.ItemContactBinding
 import com.latihangoding.tittle_tattle.vo.Contact
 
@@ -23,7 +24,8 @@ class ContactAdapter : ListAdapter<Contact, ContactAdapter.ViewHolder>(DiffCallb
     class ViewHolder private constructor(private val binding: ItemContactBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Contact) {
-            Glide.with(binding.root).load(item.image).into(binding.ivAvatar)
+            Glide.with(binding.root).load(item.image).error(R.drawable.ic_user)
+                .into(binding.ivAvatar)
             binding.tvFullname.text = item.fullname
             binding.tvPhoneNumber.text = item.phoneNumber
             binding.tvEmail.text = item.email

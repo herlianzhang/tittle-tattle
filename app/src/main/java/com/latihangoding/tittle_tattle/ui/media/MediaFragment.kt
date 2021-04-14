@@ -87,15 +87,14 @@ class MediaAsyncTaskLoader(context: Context) : AsyncTaskLoader<List<Uri>>(contex
             null,
             "${MediaStore.Images.Media.DATE_ADDED} DESC"
         )
-        if (cursor != null) {
+        if (cursor != null && cursor.moveToFirst()) {
             val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-            cursor.moveToFirst()
-            while (cursor.moveToNext()) {
+            do  {
                 val id = cursor.getLong(idColumn)
                 val uri =
                     ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
                 currentMedia.add(uri)
-            }
+            } while (cursor.moveToNext())
         }
         cursor?.close()
         return currentMedia

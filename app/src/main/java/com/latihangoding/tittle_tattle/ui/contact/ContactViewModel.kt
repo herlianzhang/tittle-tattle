@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
+//view model untuk model data contact
 class ContactViewModel @Inject constructor() : ViewModel() {
     private val _contact = MutableLiveData<List<Contact>>()
     val contact: LiveData<List<Contact>>

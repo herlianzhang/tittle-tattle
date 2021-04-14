@@ -22,6 +22,8 @@ class MediaAdapter(private val onClickListener: OnClickListener) :
     class ViewHolder private constructor(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+//        menghubungkan posisi item dengan click listener ketika di click
+//        sehingga akan masuk ke activity media
         fun bind(item: Uri, onClickListener: OnClickListener) {
             Glide.with(binding.root.context).load(item).into(binding.ivMain)
 

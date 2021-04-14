@@ -34,8 +34,10 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+//        menghubungkan view group dengan xml fragment contact
         binding = FragmentContactBinding.inflate(inflater, container, false)
 
+//        menginialisasi loader manager
         LoaderManager.getInstance(this).initLoader(2, null, this)
 
         binding.rvMain.adapter = contactAdapter
@@ -47,17 +49,20 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun initListener() {
+//        ketika terjadi perubahan data di contact, maka akan langsung melakuakn perubahan di view
         binding.etSearch.doOnTextChanged { _, _, _, _ ->
             viewModel.contact.value?.let { search(binding.etSearch.text.toString(), it) }
         }
     }
 
     private fun initObserver() {
+//        ketika terjadi perubahan pada textView, maka akan menjalankan function search
         viewModel.contact.observe(viewLifecycleOwner) {
             search(binding.etSearch.text.toString(), it)
         }
     }
 
+//    ketika loader diciptakan, maka akan langsung mengambil data dari contact
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         return CursorLoader(
             requireContext(),
@@ -74,6 +79,7 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
+//    ketika loader semua telah selesai meload data, maka akan mempassing data tersebut ke viewModel
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
         if (data != null && data.moveToFirst()) {
             val contact = mutableListOf<Contact>()
@@ -107,6 +113,7 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
+//    function untuk mengambil email di contact, apabila tidak ada email maka akan default value "No Email"
     private fun getEmail(contactId: Int): String {
         var email = "No Email"
         val cursor = requireContext().contentResolver.query(
@@ -122,6 +129,7 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         return email
     }
 
+//    function untuk mangambil nama dari contact
     private fun getName(contactId: Int): ContactName? {
         var contactName: ContactName? = null
         val cursor = requireContext().contentResolver.query(
@@ -145,11 +153,13 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         return contactName
     }
 
+//      function untuk mengambil foto dari contact
     private fun getPhoto(contactId: Int): Uri {
         val contactUri: Uri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId.toLong())
         return Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
     }
 
+//    function untuk melakukan pencarian berdasarkan nama / nomor telepon, kemudian memunculkan data tersebut ke view model
     private fun search(q: String, contact: List<Contact>) {
         val currContact = contact.filter {
             it.fullname?.contains(q, true) == true || it.email?.contains(

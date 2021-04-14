@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // Loader
 @AndroidEntryPoint
+
 class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
     MediaAdapter.OnClickListener {
 
@@ -37,6 +38,7 @@ class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
 
         binding.rvMain.adapter = mediaAdapter
 
+//        inialisasi loader manager unutk mengatur loader yang terdapat pada fragment ini
         LoaderManager.getInstance(this).initLoader(1, null, this)
 
         initObserver()
@@ -50,6 +52,7 @@ class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
         }
     }
 
+//    ketika fragment media di click maka akan membuat result fragment yang baru
     override fun onClick(uri: Uri) {
         setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_KEY to uri.toString()))
         findNavController().popBackStack()
@@ -60,10 +63,11 @@ class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
         const val BUNDLE_KEY = "bundle_key"
     }
 
+//    ketika loader tercreate maka secara async untuk load data
     override fun onCreateLoader(id: Int, args: Bundle?) =
         MediaAsyncTaskLoader(requireContext())
 
-
+// ketika telah menyelesaikan tugas loader, maka akan menampilkan data ke viewmodel
     override fun onLoadFinished(loader: Loader<List<Uri>>, data: List<Uri>) {
         viewModel.setMedia(data)
     }

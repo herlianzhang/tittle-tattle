@@ -43,14 +43,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun initListener() {
+        //        binding button fabGallery untuk navigate ke galleryfragment ketika ditekan
         binding.fabGallery.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_galleryFragment)
         }
 
+        //        binding button fabTimer untuk navigate ke timer fragment ketika ditekan
         binding.fabTimer.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_timerFragment)
         }
 
+//        binding button fabcontact untuk navigate ke contact fragment ketika ditekan
         binding.fabContact.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_contactFragment)
         }

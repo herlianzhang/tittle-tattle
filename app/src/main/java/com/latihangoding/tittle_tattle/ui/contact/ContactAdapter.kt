@@ -12,17 +12,21 @@ import com.latihangoding.tittle_tattle.vo.Contact
 
 class ContactAdapter : ListAdapter<Contact, ContactAdapter.ViewHolder>(DiffCallback()) {
 
+//    create view holder dari parentnya
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder.from(parent)
 
+//    menghubungkan view holder dengan item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
     }
 
-
     class ViewHolder private constructor(private val binding: ItemContactBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+//       menghubungkan parameter dari data di recycler view dengan parameter di item
+//        atau passing data dari item ke recycler view
         fun bind(item: Contact) {
             Glide.with(binding.root).load(item.image).error(R.drawable.ic_user)
                 .into(binding.ivAvatar)
@@ -34,6 +38,7 @@ class ContactAdapter : ListAdapter<Contact, ContactAdapter.ViewHolder>(DiffCallb
         }
 
         companion object {
+//            menghubungkan view holder dengan viewgroup yang diinginkan dengan infalte
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ItemContactBinding.inflate(layoutInflater, parent, false)

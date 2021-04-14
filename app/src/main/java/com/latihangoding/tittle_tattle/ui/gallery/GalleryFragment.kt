@@ -35,7 +35,7 @@ class GalleryFragment : Fragment() {
 
     private val galleryAdapter = GalleryAdapter()
 
-    private val startForResult = registerForActivityResult(StartActivityForResult()) { result ->
+    private val x = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val imageUri = result.data?.data
             if (imageUri != null) {
@@ -90,6 +90,8 @@ class GalleryFragment : Fragment() {
             IntentFilter(UploadService.buttonStatus)
         )
 
+
+//      mendaftarkan listener ke fragment untuk mengambil data untuk di tampilkan
         setFragmentResultListener(MediaFragment.REQUEST_KEY) { _, bundle ->
             val uri = Uri.parse(bundle.getString(MediaFragment.BUNDLE_KEY))
             val mIntent = Intent(requireContext(), UploadService::class.java).also {
@@ -159,6 +161,7 @@ class GalleryFragment : Fragment() {
 //        intent.type = "image/jpg"
 //        startForResult.launch(intent)
 
+//    setelah mendapatkan image maka navigate ke action_galleryFragment_to_mediaFragment
     findNavController().navigate(R.id.action_galleryFragment_to_mediaFragment)
 }
 

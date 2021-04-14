@@ -50,6 +50,10 @@ class HomeFragment : Fragment() {
         binding.fabTimer.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_timerFragment)
         }
+
+        binding.fabContact.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_contactFragment)
+        }
     }
 
     private fun setupAdapter() {

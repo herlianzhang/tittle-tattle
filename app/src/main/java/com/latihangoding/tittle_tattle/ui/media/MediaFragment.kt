@@ -17,8 +17,10 @@ import androidx.loader.content.AsyncTaskLoader
 import androidx.loader.content.Loader
 import androidx.navigation.fragment.findNavController
 import com.latihangoding.tittle_tattle.databinding.FragmentMediaBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 // Loader
+@AndroidEntryPoint
 class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
     MediaAdapter.OnClickListener {
 

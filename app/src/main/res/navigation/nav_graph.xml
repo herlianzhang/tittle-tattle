@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_timerFragment"
             app:destination="@id/timerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactFragment"
+            app:destination="@id/contactFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
@@ -36,5 +39,10 @@
         android:name="com.latihangoding.tittle_tattle.ui.media.MediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="com.latihangoding.tittle_tattle.ui.contact.ContactFragment"
+        android:label="fragment_contact"
+        tools:layout="@layout/fragment_contact" />
 
 </navigation>

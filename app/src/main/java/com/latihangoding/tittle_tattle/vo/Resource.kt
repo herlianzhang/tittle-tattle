@@ -1,5 +1,6 @@
  package com.latihangoding.tittle_tattle.vo
 
+import com.latihangoding.tittle_tattle.utils.EspressoIdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -12,6 +13,7 @@ import kotlinx.coroutines.withContext
 
 fun <T> getResult(call: suspend () -> retrofit2.Response<T>) =
     flow {
+        EspressoIdlingResource.increment()
         emit(Resource.LOADING<T>())
         try {
             val response = withContext(Dispatchers.IO) { call() }
@@ -24,4 +26,5 @@ fun <T> getResult(call: suspend () -> retrofit2.Response<T>) =
         } catch (e: Exception) {
             emit(Resource.ERROR<T>(e))
         }
+        EspressoIdlingResource.decrement()
     }

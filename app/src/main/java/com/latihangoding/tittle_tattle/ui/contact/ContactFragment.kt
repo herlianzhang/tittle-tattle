@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.latihangoding.tittle_tattle.databinding.FragmentContactBinding
+import com.latihangoding.tittle_tattle.utils.EspressoIdlingResource
 import com.latihangoding.tittle_tattle.vo.Contact
 import com.latihangoding.tittle_tattle.vo.ContactName
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,12 +59,14 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     private fun initObserver() {
 //        ketika terjadi perubahan pada textView, maka akan menjalankan function search
         viewModel.contact.observe(viewLifecycleOwner) {
+            EspressoIdlingResource.decrement()
             search(binding.etSearch.text.toString(), it)
         }
     }
 
 //    ketika loader diciptakan, maka akan langsung mengambil data dari contact
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        EspressoIdlingResource.increment()
         return CursorLoader(
             requireContext(),
             Phone.CONTENT_URI,

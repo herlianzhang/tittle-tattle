@@ -14,6 +14,9 @@ import com.latihangoding.tittle_tattle.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+//Tampilan: Ini mewakili UI aplikasi tanpa Logika Aplikasi apa pun. Itu mengamati ViewModel.
+// Ini memberikan aliran data ke View. Ia juga menggunakan hook atau callback untuk memperbarui View. Ini akan meminta data dari Model.
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 

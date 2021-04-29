@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//ViewModel: Bertindak sebagai penghubung antara Model dan View. Ini bertanggung jawab untuk mengubah data dari Model
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRep: HomeRepository) : ViewModel() {
 

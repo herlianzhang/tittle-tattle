@@ -32,24 +32,33 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class IdleTest {
 
+    //    Deklarasi rule penguji dengan menggunakan java virtual machine
     @get:Rule
+    //  menggunakan main_activity untuk diuji
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+//    sebelum memulai pengujian melakukan setup untuk meregister idling resource
     @Before
     fun setUp() {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingresource)
     }
 
+
+//    setelah selesai melakukan pengujian, maka unregeister idling resource
     @After
     fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingresource)
     }
 
+//    register idling resouce berfungsi agar uji akan menunggu hingga resource selesai, kemudian akan melanjutkan pengujian
+
+// melakukan test pada home activity, ketika menemukan text "Cat Facts", maka pengujian dinyatakan benar
     @Test
     fun home_succesful_fetchingdata() {
         onView(withText("Cat Facts")).check(matches(isDisplayed()))
     }
 
+//    melakukan test pada home activity, melakukan scroll kebawah hingga menemukan view holder dengan title "Dribbble"
     @Test
     fun homeScrollToDribbble() {
         Thread.sleep(1000)
@@ -60,6 +69,7 @@ class IdleTest {
                 )
             )
         )
+//    bila text_view dengan id tv_title muncul dengan hasil "Dribbble", maka pengujian dinyatakan benar
         val textView = onView(
             Matchers.allOf(
                 withId(R.id.tv_title), withText("Dribbble"),
@@ -71,6 +81,8 @@ class IdleTest {
 
     @Test
     fun homeScrollToLoginRadius() {
+//    melakukan test pada home activity namun sleep selama 1 detik kemudian
+//    melakukan scroll kebawah hingga menemukan view holder dengan title "LoginRadius"
         Thread.sleep(1000)
         onView(withId(R.id.rv_main)).perform(
             RecyclerViewActions.scrollToHolder(
@@ -79,6 +91,8 @@ class IdleTest {
                 )
             )
         )
+
+        //    bila text_view dengan id tv_title muncul dengan hasil "LoginRadius", maka pengujian dinyatakan benar
         val textView = onView(
             Matchers.allOf(
                 withId(R.id.tv_title), withText("LoginRadius"),
@@ -90,6 +104,8 @@ class IdleTest {
 
     @Test
     fun homeScrollToPhishStats() {
+        //    melakukan test pada home activity namun sleep selama 1 detik kemudian
+//    melakukan scroll kebawah hingga menemukan view holder dengan title "PhishStats"
         Thread.sleep(1000)
         onView(withId(R.id.rv_main)).perform(
             RecyclerViewActions.scrollToHolder(
@@ -98,6 +114,8 @@ class IdleTest {
                 )
             )
         )
+
+        //    bila text_view dengan id tv_title muncul dengan hasil "PhishStats", maka pengujian dinyatakan benar
         val textView = onView(
             Matchers.allOf(
                 withId(R.id.tv_title), withText("PhishStats"),
@@ -109,6 +127,7 @@ class IdleTest {
 
     @Test
     fun checkContactKevinTio() {
+//        melakukan test, dengan menekan fab dengan id fab_contact
         val floatingActionButton = onView(
             Matchers.allOf(
                 withId(R.id.fab_contact),
@@ -124,6 +143,8 @@ class IdleTest {
         )
         floatingActionButton.perform(ViewActions.click())
 
+//        setelah mengklik fab, maka akan masuk ke view baru, kemudian pengujian akan mengisi text view dengan "kevin tio"
+//        kemudian mematikan soft keyboard (keyboard virtual pada handphone)
         val textInputEditText = onView(
             Matchers.allOf(
                 withId(R.id.et_search),
@@ -134,6 +155,8 @@ class IdleTest {
             ViewActions.replaceText("kevin tio"),
             ViewActions.closeSoftKeyboard()
         )
+
+//        melakukan sleep selama satu detik, kemudian melakukan pencocokan item dengan fullname "Kevin Tiothanry"
         Thread.sleep(1000)
         val textView = onView(
             Matchers.allOf(
@@ -144,6 +167,7 @@ class IdleTest {
         )
         textView.check(matches(withText("Kevin Tiothanry")))
 
+//        melakukan pencocokan item dengan nomor telepon "+6282370601243",
         val textView2 = onView(
             Matchers.allOf(
                 withId(R.id.tv_phoneNumber), withText("+6282370601243"),
@@ -152,10 +176,13 @@ class IdleTest {
             )
         )
         textView2.check(matches(withText("+6282370601243")))
+
+//        bila semua pengecekan benar, maka pengujian dinyatakan sesuai / benar
     }
 
     @Test
     fun checkContactFelixLiman() {
+        //        melakukan test, dengan menekan fab dengan id fab_contact
         val floatingActionButton = onView(
             Matchers.allOf(
                 withId(R.id.fab_contact),
@@ -171,6 +198,8 @@ class IdleTest {
         )
         floatingActionButton.perform(ViewActions.click())
 
+        //        setelah mengklik fab, maka akan masuk ke view baru, kemudian pengujian akan mengisi text view dengan "Felix Liman"
+//        kemudian mematikan soft keyboard (keyboard virtual pada handphone)
         val textInputEditText = onView(
             Matchers.allOf(
                 withId(R.id.et_search),
@@ -181,6 +210,8 @@ class IdleTest {
             ViewActions.replaceText("Felix Liman"),
             ViewActions.closeSoftKeyboard()
         )
+
+        //        melakukan sleep selama satu detik, kemudian melakukan pencocokan item dengan fullname "Felix Liman"
         Thread.sleep(1000)
         val textView = onView(
             Matchers.allOf(
@@ -191,6 +222,7 @@ class IdleTest {
         )
         textView.check(matches(withText("Felix Liman")))
 
+        //        melakukan pencocokan item dengan nomor telepon "+6285261746811",
         val textView3 = onView(
             Matchers.allOf(
                 withId(R.id.tv_phoneNumber), withText("+6285261746811"),
@@ -199,10 +231,13 @@ class IdleTest {
             )
         )
         textView3.check(matches(withText("+6285261746811")))
+
+        //        bila semua pengecekan benar, maka pengujian dinyatakan sesuai / benar
     }
 
     @Test
     fun scrollToContactModem() {
+//        melakukan test, dengan menekan fab dengan id fab_contact
         val floatingActionButton = onView(
             Matchers.allOf(
                 withId(R.id.fab_contact),
@@ -217,6 +252,8 @@ class IdleTest {
             )
         )
         floatingActionButton.perform(ViewActions.click())
+
+//        sleep selama satu detik, melakukan scroll pada recycler view hingga menemukan item dengan full name "Modem"
         Thread.sleep(1000)
         onView(withId(R.id.rv_main)).perform(
             RecyclerViewActions.scrollToHolder(
@@ -225,6 +262,8 @@ class IdleTest {
                 )
             )
         )
+
+//        melakukan pencocokan item dengan fullname "Modem", bila ditemukan, maka pengujian dinyatakan benar
         val textView = onView(
             Matchers.allOf(
                 withId(R.id.tv_fullname), withText("Modem"),
@@ -237,6 +276,7 @@ class IdleTest {
 
     @Test
     fun scrollToContactKristianAntoni() {
+        //        melakukan test, dengan menekan fab dengan id fab_contact
         val floatingActionButton = onView(
             Matchers.allOf(
                 withId(R.id.fab_contact),
@@ -251,6 +291,9 @@ class IdleTest {
             )
         )
         floatingActionButton.perform(ViewActions.click())
+
+        //        setelah mengklik fab, maka akan masuk ke view baru, kemudian pengujian akan mengisi text view dengan "Kristian Antoni"
+        //        kemudian mematikan soft keyboard (keyboard virtual pada handphone)
         Thread.sleep(1000)
         onView(withId(R.id.rv_main)).perform(
             RecyclerViewActions.scrollToHolder(
@@ -259,6 +302,9 @@ class IdleTest {
                 )
             )
         )
+
+        //        melakukan sleep selama satu detik, kemudian melakukan pencocokan item dengan fullname "Kristian Antoni"
+//        bila ditemukan, maka pengujian dinyatakan benar
         val textView = onView(
             Matchers.allOf(
                 withId(R.id.tv_fullname), withText("Kristian Antoni"),
@@ -269,6 +315,7 @@ class IdleTest {
         textView.check(matches(isDisplayed()))
     }
 
+    //    function berfungsi untuk mencari view di parent berdasarkan posisi parent
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int
     ): Matcher<View> {
@@ -287,6 +334,7 @@ class IdleTest {
         }
     }
 
+//    function berfungsi untuk mencari item yang sesuai dengan text yang diinput
     private inline fun <reified T : RecyclerView.ViewHolder> withTitle(
         title: String,
         id: Int

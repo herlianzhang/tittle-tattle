@@ -22,7 +22,6 @@ import com.latihangoding.tittle_tattle.vo.ContactName
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-
 @AndroidEntryPoint
 class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 

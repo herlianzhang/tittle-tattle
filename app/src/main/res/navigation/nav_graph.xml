@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_contactFragment"
             app:destination="@id/contactFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_MusicFragment"
+            app:destination="@id/musicFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
@@ -44,5 +47,10 @@
         android:name="com.latihangoding.tittle_tattle.ui.contact.ContactFragment"
         android:label="fragment_contact"
         tools:layout="@layout/fragment_contact" />
+    <fragment
+        android:id="@+id/musicFragment"
+        android:name="com.latihangoding.tittle_tattle.ui.music.MusicFragment"
+        android:label="fragment_music"
+        tools:layout="@layout/fragment_music" />
 
 </navigation>

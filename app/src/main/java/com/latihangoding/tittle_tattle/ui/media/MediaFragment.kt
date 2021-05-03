@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // Loader
 @AndroidEntryPoint
-
 class MediaFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Uri>>,
     MediaAdapter.OnClickListener {
 

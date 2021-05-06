@@ -20,8 +20,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MusicFragment : Fragment(), MusicAdapter.AudioListener {
 
+//    binding fragment music binding
     private lateinit var binding: FragmentMusicBinding
 
+//    view model
     private val viewModel: MusicViewModel by viewModels()
 
     private val musicAdapter = MusicAdapter(this)
@@ -35,14 +37,19 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // assign binding fragment ke xml fragment_music
         binding = FragmentMusicBinding.inflate(layoutInflater, container, false)
 
+//        build audio attribute untuk terima tipe kontet musik dan usage media
         val audioAttrs: AudioAttributes = AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .build()
+
+//        build soundpool dengan 10 soundpool maksimal yang dapat dimainkan secara bersamaan
         soundPool = SoundPool.Builder().setMaxStreams(10).setAudioAttributes(audioAttrs).build()
 
+//        soundpool load data audio dengan nama file "button_clicked.mp3"
         sound = soundPool.load(requireContext(), R.raw.button_clicked, 1)
 
         initAdapter()
@@ -52,10 +59,12 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
         return binding.root
     }
 
+//    membinding media adapter dengan musicadapter
     private fun initAdapter() {
         binding.rvMedia.adapter = musicAdapter
     }
 
+//    ketika floating action button di klik maka akan memunculkan suara dari soundpool yang telah di load
     private fun initListener() {
         binding.fabIsList.setOnClickListener {
             if (sound != 0)
@@ -65,9 +74,12 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
     }
 
     private fun initObserver() {
+        // megobservasi data ketika ada perubahan data
         viewModel.audios.observe(viewLifecycleOwner) {
             musicAdapter.submitList(it)
         }
+
+//        view model untuk mengobservasi button layoutManager, apabila aktif maka ditampilkan secara view list, bila tidak aktif maka ditampilkan secara grid
         viewModel.isList.observe(viewLifecycleOwner) { isList ->
             if (isList) {
                 binding.rvMedia.layoutManager =
@@ -82,6 +94,7 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
         }
     }
 
+    //  menghancurkan juga semua media player yang berjalan
     private fun removeAudio() {
         mediaPlayer.forEach {
             it.value?.release()
@@ -89,6 +102,7 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
         mediaPlayer.clear()
     }
 
+//    menjalankan media player
     override fun startAudio(uri: Uri, position: Int) {
         if (mediaPlayer[position] == null) {
             mediaPlayer[position] = MediaPlayer.create(requireContext(), uri)
@@ -101,11 +115,14 @@ class MusicFragment : Fragment(), MusicAdapter.AudioListener {
         mediaPlayer[position]?.start()
     }
 
+//    memberhentikan audio pada media player yang sedang aktif
     override fun stopAudio(position: Int) {
         Timber.d("Pause position $position")
         mediaPlayer[position]?.pause()
     }
 
+
+//    menjalankan func removeAudio ketika musicFragment destroyed
     override fun onDestroy() {
         super.onDestroy()
         removeAudio()

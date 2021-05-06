@@ -21,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MusicViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
 
+    // penampung untuk live data dengan model AudioModel
     private val _audios = MutableLiveData<List<AudioModel>>()
     val audios: LiveData<List<AudioModel>>
         get() = _audios

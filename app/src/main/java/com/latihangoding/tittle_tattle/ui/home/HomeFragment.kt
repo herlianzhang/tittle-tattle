@@ -96,6 +96,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
+//    ketika floating action button ditekan maka akan menjalankan soundpool
     override fun onClick(v: View?) {
         if (sound != 0)
             soundPool.play(sound, 1f, 1f, 0, 0, 1f)

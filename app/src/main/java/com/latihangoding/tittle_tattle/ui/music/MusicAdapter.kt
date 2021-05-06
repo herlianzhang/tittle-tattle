@@ -23,11 +23,13 @@ class MusicAdapter(
 
     var playedIndex = -1
 
+//    ketika audiolistener selesai, maka akan menotifikasi bahwa item telah selesai digunakan
     fun onCompleteListener() {
         notifyItemChanged(playedIndex, true)
         playedIndex = -1
     }
 
+//    create view holder dari parent
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (SharedPreferenceHelper(parent.context, "music").isList) {
             from(parent)
@@ -36,6 +38,7 @@ class MusicAdapter(
         }
     }
 
+//    menghubungkan view holder dengan item
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -64,8 +67,12 @@ class MusicAdapter(
             super.onBindViewHolder(holder, position, payloads)
     }
 
+//    view holder untuk list view
     inner class ViewHolder(private val binding: ItemMusicBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+//        menghubungan parameter dari data di recycler view dengan parameter di item
+//        atau passing data dari item ke recycler view
         fun bind(item: AudioModel) {
             binding.tvTitle.text = item.title
             binding.lavPlayPause.progress = if (layoutPosition == playedIndex) 1f else 0f
@@ -79,6 +86,7 @@ class MusicAdapter(
 
         }
 
+//        menjalankan animasi lottie secara reverse
         fun reverse() {
             Timber.d("playedindex reverse position $layoutPosition")
             binding.lavPlayPause.apply {
@@ -88,6 +96,8 @@ class MusicAdapter(
             }
         }
 
+//        menjalankan lottie secara reverse jika audio sedang aktif dan memberhentikan audio listener
+//        menjalankan lottie, jika audio sedang tidak aktif dan memulai audio listener
         private fun audioListener(item: AudioModel) {
             binding.lavPlayPause.apply {
                 Timber.d("playedIndex before = $playedIndex")
@@ -109,8 +119,12 @@ class MusicAdapter(
         }
     }
 
+//    view holder untuk grid view
     inner class ViewHolderGrid(private val binding: ItemMusicGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+    //        menghubungan parameter dari data di recycler view dengan parameter di item
+//        atau passing data dari item ke recycler view
         fun bind(item: AudioModel) {
             binding.tvTitle.text = item.title
             binding.lavPlayPause.progress = if (layoutPosition == playedIndex) 1f else 0f
@@ -124,6 +138,7 @@ class MusicAdapter(
 
         }
 
+    //        menjalankan animasi lottie secara reverse
         fun reverse() {
             Timber.d("playedindex reverse position $layoutPosition")
             binding.lavPlayPause.apply {
@@ -133,6 +148,8 @@ class MusicAdapter(
             }
         }
 
+    //        menjalankan lottie secara reverse jika audio sedang aktif dan memberhentikan audio listener
+//        menjalankan lottie, jika audio sedang tidak aktif dan memulai audio listener
         private fun audioListener(item: AudioModel) {
             binding.lavPlayPause.apply {
                 Timber.d("playedIndex before = $playedIndex")
@@ -154,12 +171,14 @@ class MusicAdapter(
         }
     }
 
+//    menghubungkan view holder (list view) dengan viewgroup yang diinginkan dengna inflate
     private fun from(parent: ViewGroup): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemMusicBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(binding)
     }
 
+    //    menghubungkan view holder (grid view) dengan viewgroup yang diinginkan dengna inflate
     private fun fromGrid(parent: ViewGroup): ViewHolderGrid {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemMusicGridBinding.inflate(layoutInflater, parent, false)

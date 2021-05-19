@@ -70,6 +70,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         //        binding button fabMusic untuk navigate ke music fragment ketika ditekan
         binding.fabMusic.setOnClickListener(this)
+
+        binding.fabPhoneStorage.setOnClickListener(this)
     }
 
     private fun setupAdapter() {
@@ -96,7 +98,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
-//    ketika floating action button ditekan maka akan menjalankan soundpool
+    //    ketika floating action button ditekan maka akan menjalankan soundpool
     override fun onClick(v: View?) {
         if (sound != 0)
             soundPool.play(sound, 1f, 1f, 0, 0, 1f)
@@ -110,6 +112,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 findNavController().navigate(R.id.action_homeFragment_to_contactFragment)
             R.id.fab_music ->
                 findNavController().navigate(R.id.action_homeFragment_to_MusicFragment)
+            R.id.fab_phone_storage ->
+                findNavController().navigate(R.id.action_homeFragment_to_internalExternalFragment)
         }
     }
 

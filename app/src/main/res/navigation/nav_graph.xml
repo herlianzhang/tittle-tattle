@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_homeFragment_to_MusicFragment"
             app:destination="@id/musicFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_internalExternalFragment"
+            app:destination="@id/internalExternalFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
@@ -52,5 +55,10 @@
         android:name="com.latihangoding.tittle_tattle.ui.music.MusicFragment"
         android:label="fragment_music"
         tools:layout="@layout/fragment_music" />
+    <fragment
+        android:id="@+id/internalExternalFragment"
+        android:name="com.latihangoding.tittle_tattle.ui.internalexternal.InternalExternalFragment"
+        android:label="fragment_internal_external"
+        tools:layout="@layout/fragment_internal_external" />
 
 </navigation>

@@ -26,6 +26,41 @@ class InternalExternalFragment : Fragment(), AdapterView.OnItemSelectedListener 
 
     var spinnerValue = listOf("New File")
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            123 -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    Toast.makeText(requireContext(), "Izin Diberikan", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Izin Ditolak", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        binding.etFilename.isEnabled = position == 0
+        if (position != 0) {
+            if (binding.switchMain.isChecked)
+                readFileExternal(position)
+            else
+                readFileInternal(position)
+        } else {
+            binding.etFilename.setText("")
+            binding.etNote.text.clear()
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,11 +94,18 @@ class InternalExternalFragment : Fragment(), AdapterView.OnItemSelectedListener 
             }
         }
 
-        binding.switchMain.setOnClickListener {
-            if (!binding.switchMain.isChecked)
+        binding.switchMain.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (!isExternalStorageReadable() && isChecked) {
+                buttonView.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            if (!isChecked) {
                 getInternalFiles()
-            else
+            } else {
                 getExternalFiles()
+            }
+
+            binding.switchMain.text = if (isChecked) "External" else "Internal"
         }
     }
 
@@ -77,31 +119,13 @@ class InternalExternalFragment : Fragment(), AdapterView.OnItemSelectedListener 
         initSpinner()
     }
 
-    private fun getExternalFiles() {
-        val tmp = mutableListOf("New File")
-        for (file in activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.listFiles()
-            ?.toList() ?: emptyList()) {
-            if (file.toString().contains(".txt"))
-                tmp.add(file.toString())
-        }
-        spinnerValue = tmp
-        initSpinner()
-    }
-
-    private fun initSpinner() {
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerValue)
-        binding.spinnerMain.adapter = adapter
-    }
-
     private fun writeFileInternal() {
         var filename = binding.etFilename.text.toString()
         if (filename.contains(".txt")) {
             filename = filename.substring(0, filename.indexOf(".txt"))
         }
 
-        var output =
-            activity?.openFileOutput("$filename.txt", Context.MODE_PRIVATE)
+        activity?.openFileOutput("$filename.txt", Context.MODE_PRIVATE)
                 ?.apply {
                     write(binding.etNote.text.toString().trim().toByteArray())
                     close()
@@ -132,46 +156,46 @@ class InternalExternalFragment : Fragment(), AdapterView.OnItemSelectedListener 
         }
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        binding.etFilename.isEnabled = position == 0
-        if (position != 0) {
-            if (binding.switchMain.isChecked)
-                readFileExternal(position)
-            else
-                readFileInternal(position)
-        } else {
-            binding.etFilename.setText("")
-            binding.etNote.text.clear()
+    private fun getExternalFiles() {
+        val tmp = mutableListOf("New File")
+        for (file in activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.listFiles()
+            ?.toList() ?: emptyList()) {
+            if (file.toString().contains(".txt"))
+                tmp.add(file.name.toString())
         }
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
+        spinnerValue = tmp
+        initSpinner()
     }
 
     private fun writeFileExternal() {
-        var myDir = File(activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.toURI())
+        if (!isExternalStorageReadable()) return
+        var filename = binding.etFilename.text.toString()
+        if (filename.contains(".txt")) {
+            filename = filename.substring(0, filename.indexOf(".txt"))
+        }
+        val myDir = File(activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.toURI())
         if (!myDir.exists()) {
             myDir.mkdir()
         }
-        File(myDir, binding.etFilename.text.toString()).apply {
-            writeText(binding.etNote.text.toString())
+        File(myDir, "$filename.txt").apply {
+            writeText(binding.etNote.text.toString().trim())
+            Toast.makeText(requireContext(), "File Save", Toast.LENGTH_SHORT).show()
         }
-        binding.etNote.text.clear()
     }
 
     private fun readFileExternal(position: Int) {
+        if (!isExternalStorageReadable()) return
         val filename = spinnerValue[position]
-        var myDir = File(activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.toURI())
+        val myDir = File(activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.toURI())
         var readFile = ""
         binding.etFilename.setText(filename)
         File(myDir, filename).forEachLine(Charsets.UTF_8) {
-            readFile += it
+            readFile += "$it\n"
         }
-        binding.etNote.setText(readFile)
+        binding.etNote.setText(readFile.trim())
     }
 
-    fun isExternalStorageReadable(): Boolean {
+    private fun isExternalStorageReadable(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -184,30 +208,20 @@ class InternalExternalFragment : Fragment(), AdapterView.OnItemSelectedListener 
                 ),
                 123
             )
+            return false
         }
-        var state = Environment.getExternalStorageState()
-        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(
-                state
-            )
-        ) {
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state) {
             return true
         }
+        Toast.makeText(requireContext(), "Storage Sd tidak dapat dibaca", Toast.LENGTH_SHORT).show()
         return false
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            123 -> {
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                ) {
-                    Toast.makeText(requireContext(), "Izin Diberikan", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+
+    private fun initSpinner() {
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerValue)
+        binding.spinnerMain.adapter = adapter
     }
 }

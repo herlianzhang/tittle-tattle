@@ -10,13 +10,17 @@ import com.latihangoding.tittle_tattle.databinding.ItemGalleryBinding
 
 import com.latihangoding.tittle_tattle.vo.GalleryModel
 
-class GalleryAdapter : ListAdapter<GalleryModel, GalleryAdapter.ViewHolder>(DiffCallback()) {
+class GalleryAdapter(private val onClickListener: OnClickListener) : ListAdapter<GalleryModel, GalleryAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(item)
+        }
     }
 
 
@@ -43,5 +47,9 @@ class GalleryAdapter : ListAdapter<GalleryModel, GalleryAdapter.ViewHolder>(Diff
 
         override fun areContentsTheSame(oldItem: GalleryModel, newItem: GalleryModel) =
             oldItem == newItem
+    }
+
+    interface OnClickListener {
+        fun onClick(item: GalleryModel)
     }
 }

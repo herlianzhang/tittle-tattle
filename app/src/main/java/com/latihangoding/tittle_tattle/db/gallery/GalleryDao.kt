@@ -1,10 +1,7 @@
 package com.latihangoding.tittle_tattle.db.gallery
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.latihangoding.tittle_tattle.vo.GalleryModel
 
 // aksi menyimpan data dengan melakukan perintah sql
@@ -15,4 +12,7 @@ interface GalleryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGallery(gallery: GalleryModel)
+
+    @Update
+    suspend fun updateGallery(gallery: GalleryModel)
 }

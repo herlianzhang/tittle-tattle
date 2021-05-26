@@ -10,30 +10,38 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentGalleryBinding
 import com.latihangoding.tittle_tattle.service.UploadService
 import com.latihangoding.tittle_tattle.ui.media.MediaFragment
+import com.latihangoding.tittle_tattle.vo.GalleryModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), GalleryAdapter.OnClickListener {
 
     private lateinit var binding: FragmentGalleryBinding
     private val viewModel: GalleryViewModel by viewModels()
 
-    private val galleryAdapter = GalleryAdapter()
+    private val galleryAdapter = GalleryAdapter(this)
 
     private val x = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -47,7 +55,7 @@ class GalleryFragment : Fragment() {
         }
     }
 
-// untuk menerima broadcast receiver yang terjadi perubahan di proses sehinga mengubah status button tersebut
+    // untuk menerima broadcast receiver yang terjadi perubahan di proses sehinga mengubah status button tersebut
     private val buttonStatusReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val isButtonEnable = intent?.getBooleanExtra(UploadService.isButtonEnable, true)
@@ -103,7 +111,7 @@ class GalleryFragment : Fragment() {
         return binding.root
     }
 
-//    mengunregister receiver button status ketika fragment dihancurkan
+    //    mengunregister receiver button status ketika fragment dihancurkan
     override fun onDestroy() {
         super.onDestroy()
         requireContext().unregisterReceiver(buttonStatusReceiver)
@@ -154,19 +162,100 @@ class GalleryFragment : Fragment() {
         }
     }
 
-//    setelah permission telah didapat, akan memanggil fungsinya untuk mengambil foto dari gallery
+    //    setelah permission telah didapat, akan memanggil fungsinya untuk mengambil foto dari gallery
     private fun pickImageFromGallery() {
-    //Intent to pick image
+        //Intent to pick image
 //        val intent = Intent(Intent.ACTION_PICK)
 //        intent.type = "image/jpg"
 //        startForResult.launch(intent)
 
 //    setelah mendapatkan image maka navigate ke action_galleryFragment_to_mediaFragment
-    findNavController().navigate(R.id.action_galleryFragment_to_mediaFragment)
-}
+        findNavController().navigate(R.id.action_galleryFragment_to_mediaFragment)
+    }
 
     companion object {
         //Permission code
         private const val PERMISSION_CODE = 1001;
     }
+
+    override fun onClick(item: GalleryModel) {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+
+        // dialog title
+        builder.setTitle("Change url.")
+
+        // dialog message view
+        val constraintLayout = getEditTextLayout(requireContext())
+        builder.setView(constraintLayout)
+
+        val textInputLayout =
+            constraintLayout.findViewWithTag<TextInputLayout>("textInputLayoutTag")
+        val textInputEditText =
+            constraintLayout.findViewWithTag<TextInputEditText>("textInputEditTextTag")
+
+        textInputEditText.setText(item.imgPath)
+
+        // alert dialog positive button
+        builder.setPositiveButton("Submit") { dialog, which ->
+            val updatedItem = item.copy(imgPath = textInputEditText.text.toString())
+            updatedItem.id = item.id
+            viewModel.updateGallery(updatedItem)
+            Toast.makeText(requireContext(), "Sukses Update Gallery Url", Toast.LENGTH_SHORT).show()
+        }
+
+        // alert dialog other buttons
+        builder.setNegativeButton("No", null)
+        builder.setNeutralButton("Cancel", null)
+
+        // set dialog non cancelable
+        builder.setCancelable(false)
+
+        // finally, create the alert dialog and show it
+        val dialog = builder.create()
+
+        dialog.show()
+    }
+
+    // get edit text layout
+    private fun getEditTextLayout(context: Context): ConstraintLayout {
+        val constraintLayout = ConstraintLayout(context)
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        )
+        constraintLayout.layoutParams = layoutParams
+        constraintLayout.id = View.generateViewId()
+
+        val textInputLayout = TextInputLayout(context)
+        textInputLayout.boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
+        layoutParams.setMargins(
+            32.toDp(context),
+            8.toDp(context),
+            32.toDp(context),
+            8.toDp(context)
+        )
+        textInputLayout.layoutParams = layoutParams
+        textInputLayout.hint = "Input url"
+        textInputLayout.id = View.generateViewId()
+        textInputLayout.tag = "textInputLayoutTag"
+
+
+        val textInputEditText = TextInputEditText(context)
+        textInputEditText.id = View.generateViewId()
+        textInputEditText.tag = "textInputEditTextTag"
+
+        textInputLayout.addView(textInputEditText)
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintLayout.addView(textInputLayout)
+        return constraintLayout
+    }
+
+
+    // extension method to convert pixels to dp
+    fun Int.toDp(context: Context): Int = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics
+    ).toInt()
 }

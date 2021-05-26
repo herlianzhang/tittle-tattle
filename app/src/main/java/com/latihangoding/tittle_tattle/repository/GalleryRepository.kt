@@ -75,4 +75,8 @@ class GalleryRepository @Inject constructor(
     fun insertGallery(data: GalleryModel) {
         galleryDao.insertGallery(data)
     }
+
+    suspend fun updateGallery(data: GalleryModel) {
+        galleryDao.updateGallery(data)
+    }
 }

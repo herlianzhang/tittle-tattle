@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "320215183272",
+    "project_id": "tittle-tattle-758fb",
+    "storage_bucket": "tittle-tattle-758fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320215183272:android:e0ffdf075b1709adc8379d",
+        "android_client_info": {
+          "package_name": "com.latihangoding.tittle_tattle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320215183272-5in2fjrnt3tqjqho3r7j1nghjt4saddr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.latihangoding.tittle_tattle",
+            "certificate_hash": "f72d363e652b37449ac47312a0ed6c3784843ad6"
+          }
+        },
+        {
+          "client_id": "320215183272-k8q2b8tbu4dl797rn12as1ks8vf0m951.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo5e8wzgNtVHisgdVhhpZ942sE-3TyAfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320215183272-k8q2b8tbu4dl797rn12as1ks8vf0m951.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

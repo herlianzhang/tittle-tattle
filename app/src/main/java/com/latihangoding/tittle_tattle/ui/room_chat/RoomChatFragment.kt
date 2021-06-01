@@ -1,10 +1,12 @@
 package com.latihangoding.tittle_tattle.ui.room_chat
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -16,7 +18,6 @@ import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentRoomChatBinding
 import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
 import com.latihangoding.tittle_tattle.vo.User
-import timber.log.Timber
 
 class RoomChatFragment : Fragment(), RoomChatAdapter.OnClickListener {
 
@@ -32,6 +33,7 @@ class RoomChatFragment : Fragment(), RoomChatAdapter.OnClickListener {
 
         getChatRoom()
         initAdapter()
+        initListener()
 
         return binding.root
     }
@@ -49,6 +51,7 @@ class RoomChatFragment : Fragment(), RoomChatAdapter.OnClickListener {
                             mList.add(v?.copy(uid = k))
                     }
                     adapter.submitList(mList)
+                    binding.pbLoading.isVisible = false
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -60,8 +63,27 @@ class RoomChatFragment : Fragment(), RoomChatAdapter.OnClickListener {
         binding.rvMain.adapter = adapter
     }
 
-    override fun onClick(user: User) {
-        // do something
+    private fun initListener() {
+        binding.ivAction.setOnClickListener {
+            val popupmenu = PopupMenu(requireContext(), it)
+            popupmenu.menuInflater.inflate(R.menu.room_menu, popupmenu.menu)
+
+            popupmenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.other -> findNavController().navigate(R.id.action_roomChatFragment_to_homeFragment)
+                    R.id.logout -> {
+                        Firebase.auth.signOut()
+                        findNavController().navigate(R.id.action_roomChatFragment_to_loginFragment)
+                    }
+                }
+                true
+            }
+            popupmenu.show()
+        }
     }
 
+    override fun onClick(user: User) {
+        val action = RoomChatFragmentDirections.actionRoomChatFragmentToChatFragment(user)
+        findNavController().navigate(action)
+    }
 }

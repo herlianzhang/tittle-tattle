@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -56,12 +57,14 @@
         android:layout_marginBottom="8dp"
         android:clipToPadding="false"
         android:orientation="vertical"
+        android:overScrollMode="never"
         android:padding="6dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/ll_chat_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:reverseLayout="true"
         tools:listitem="@layout/item_chat_receiver" />
 
     <LinearLayout
@@ -70,16 +73,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/chat_input_background"
-        android:gravity="center"
+        android:gravity="bottom"
         android:orientation="horizontal"
+        android:paddingVertical="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_send"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="12dp"
+            android:layout_marginHorizontal="12dp"
             android:src="@drawable/ic_chat"
             app:tint="@color/white" />
 
@@ -87,21 +91,45 @@
             android:id="@+id/et_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:background="null"
+            android:background="@null"
             android:hint="Type a Message"
-            android:maxLines="1"
-            android:textColor="@color/white" />
+            android:maxLines="6"
+            android:scrollbars="vertical" />
 
         <ImageView
             android:id="@+id/iv_attach"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="12dp"
+            android:layout_marginHorizontal="12dp"
             android:background="?android:attr/actionBarItemBackground"
             android:src="@drawable/ic_attach"
             app:tint="@color/white" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_send"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/circle_teal"
+        android:padding="14dp"
+        android:src="@drawable/ic_send"
+        app:layout_constraintBottom_toBottomOf="@id/ll_chat_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        app:tint="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

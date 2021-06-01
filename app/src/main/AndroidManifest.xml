@@ -48,7 +48,8 @@
             android:exported="true"
             android:enabled="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
 
             <nav-graph android:value="@navigation/nav_graph" />
 

@@ -17,9 +17,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentLoginBinding
+import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
+import com.latihangoding.tittle_tattle.vo.User
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -43,18 +46,6 @@ class LoginFragment : Fragment() {
                 Timber.e("Masuk fail $e")
             }
         }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful)
-                    findNavController().navigate(R.id.action_loginFragment_to_roomChatFragment)
-                else
-                    Toast.makeText(requireContext(), "Google sign in failed", Toast.LENGTH_SHORT)
-                        .show()
-            }
     }
 
     override fun onCreateView(
@@ -82,8 +73,34 @@ class LoginFragment : Fragment() {
 
     private fun initListener() {
         binding.buttonLogin.setOnClickListener {
+            googleSignInClient.signOut()
             val signInIntent = googleSignInClient.signInIntent
             loginResult.launch(signInIntent)
         }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val userId = task.result?.user?.uid ?: return@addOnCompleteListener
+                    val email = task.result?.user?.email ?: return@addOnCompleteListener
+                    val photoUrl = task.result?.user?.photoUrl ?: return@addOnCompleteListener
+                    val displayName = task.result?.user?.displayName ?: return@addOnCompleteListener
+
+                    Timber.d("Masuk email $email, photoUrl $photoUrl, displayName: $displayName")
+
+                    val data = User(displayName, email, photoUrl.toString())
+                    Firebase.database.getReference(FirebaseConfiguration.USER).child(userId)
+                        .setValue(data).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                findNavController().navigate(R.id.action_loginFragment_to_roomChatFragment)
+                            }
+                    }
+                } else
+                    Toast.makeText(requireContext(), "Google sign in failed", Toast.LENGTH_SHORT)
+                        .show()
+            }
     }
 }

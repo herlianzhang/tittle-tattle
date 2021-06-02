@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -90,14 +91,18 @@ class LoginFragment : Fragment() {
                     val displayName = task.result?.user?.displayName ?: return@addOnCompleteListener
 
                     Timber.d("Masuk email $email, photoUrl $photoUrl, displayName: $displayName")
-
+                    binding.pbLoading.isVisible = true
                     val data = User(displayName, email, photoUrl.toString())
                     Firebase.database.getReference(FirebaseConfiguration.USER).child(userId)
                         .setValue(data).addOnCompleteListener {
+                            binding.pbLoading.isVisible = false
                             if (it.isSuccessful) {
                                 findNavController().navigate(R.id.action_loginFragment_to_roomChatFragment)
+                            } else {
+                                Toast.makeText(requireContext(), "Login Fail", Toast.LENGTH_SHORT)
+                                    .show()
                             }
-                    }
+                        }
                 } else
                     Toast.makeText(requireContext(), "Google sign in failed", Toast.LENGTH_SHORT)
                         .show()

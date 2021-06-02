@@ -6,6 +6,7 @@ import com.latihangoding.tittle_tattle.api.ApiService
 import com.latihangoding.tittle_tattle.api.InputStreamRequestBody
 import com.latihangoding.tittle_tattle.api.ProgressListener
 import com.latihangoding.tittle_tattle.db.gallery.GalleryDao
+import com.latihangoding.tittle_tattle.db.gallery.GalleryDatabase
 import com.latihangoding.tittle_tattle.di.UploadApi
 import com.latihangoding.tittle_tattle.vo.GalleryModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 class GalleryRepository @Inject constructor(
     private val galleryDao: GalleryDao,
+    private val galleryDb: GalleryDatabase,
     @UploadApi private val apiService: ApiService,
     @ApplicationContext private val context: Context
 ) {
@@ -73,10 +75,14 @@ class GalleryRepository @Inject constructor(
 
     //masukkan gallery ke database
     fun insertGallery(data: GalleryModel) {
-        galleryDao.insertGallery(data)
+        galleryDb.runInTransaction { // Optimasi Query Database
+            galleryDao.insertGallery(data)
+        }
     }
 
-    suspend fun updateGallery(data: GalleryModel) {
-        galleryDao.updateGallery(data)
+    fun updateGallery(data: GalleryModel) {
+        galleryDb.runInTransaction { // Optimasi Query Database
+            galleryDao.updateGallery(data)
+        }
     }
 }

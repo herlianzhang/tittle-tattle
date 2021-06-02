@@ -14,5 +14,5 @@ interface GalleryDao {
     fun insertGallery(gallery: GalleryModel)
 
     @Update
-    suspend fun updateGallery(gallery: GalleryModel)
+    fun updateGallery(gallery: GalleryModel)
 }

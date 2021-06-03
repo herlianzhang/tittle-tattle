@@ -82,6 +82,7 @@ class ContactFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
 //    ketika loader semua telah selesai meload data, maka akan mempassing data tersebut ke viewModel
+//    Content Provider mengelola akses ke repositori pusat data.
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) { // contentprovider
         if (data != null && data.moveToFirst()) {
             val contact = mutableListOf<Contact>()

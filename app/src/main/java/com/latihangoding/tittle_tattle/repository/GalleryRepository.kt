@@ -53,6 +53,7 @@ class GalleryRepository @Inject constructor(
         job?.cancel()
         job = Job()
 
+//        couroutine untuk menjalankan upload image secara async
         CoroutineScope(job as CompletableJob + Dispatchers.IO).launch {
             try {
                 val response = apiService.uploadImage(body)
@@ -74,6 +75,9 @@ class GalleryRepository @Inject constructor(
     }
 
     //masukkan gallery ke database
+//    run in transaction Mengeksekusi Runnable yang ditentukan dalam transaksi database.
+//    Transaksi akan ditandai sebagai berhasil kecuali pengecualian dilemparkan ke Runnable.
+//    Room hanya akan melakukan paling banyak satu transaksi dalam satu waktu.
     fun insertGallery(data: GalleryModel) {
         galleryDb.runInTransaction { // Optimasi Query Database
             galleryDao.insertGallery(data)

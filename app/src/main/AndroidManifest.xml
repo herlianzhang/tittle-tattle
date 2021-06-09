@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.latihangoding.tittle_tattle">
 
-
     <!--    diperlukan permission internet, gallery storage, dan wake lock-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,12 +19,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TittleTattle">
+
+        <receiver android:name="com.latihangoding.tittle_tattle.MyWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/my_widget_info" />
+        </receiver>
+        
+        <service android:name=".WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <service
             android:name=".service.UploadService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
-
+        
         <service
             android:name="com.latihangoding.tittle_tattle.service.WeatherService"
             android:exported="true"

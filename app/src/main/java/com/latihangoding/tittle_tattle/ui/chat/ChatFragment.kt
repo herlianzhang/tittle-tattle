@@ -1,11 +1,11 @@
 package com.latihangoding.tittle_tattle.ui.chat
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -15,14 +15,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentChatBinding
 import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
 import com.latihangoding.tittle_tattle.vo.Chat
+import com.latihangoding.tittle_tattle.vo.User
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
 
 class ChatFragment : Fragment() {
 
@@ -53,7 +52,9 @@ class ChatFragment : Fragment() {
     }
 
     private fun initObject() {
-        val user = args.chatUser
+        val argumentUser = arguments?.getParcelable<User>("data")
+
+        val user = argumentUser ?: args.chatUser
 
         receiverUserId = user.uid.toString()
         Glide.with(requireContext()).load(user.photoUrl).into(binding.ivAvatar)

@@ -1,28 +1,34 @@
 package com.latihangoding.tittle_tattle.ui.chat
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentChatBinding
+import com.latihangoding.tittle_tattle.utils.AdsPreferences
 import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
 import com.latihangoding.tittle_tattle.vo.Chat
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
 
 class ChatFragment : Fragment() {
 
@@ -39,17 +45,50 @@ class ChatFragment : Fragment() {
 
     val sdf = SimpleDateFormat("dd MMM yy", Locale.US)
 
+    private lateinit var adsPreferences: AdsPreferences
+    private var mRewardedAd: RewardedAd? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
+        adsPreferences = AdsPreferences(requireContext())
+
+        // jika ads tidak di mute maka, ads akan diinisialisasi
+        if (!adsPreferences.isMuteAds)
+            initAds()
         initObject()
         initAdapter()
         initListener()
 
         return binding.root
+    }
+
+    private fun initAds() {
+        val adRequest = AdRequest.Builder().build()
+
+        RewardedAd.load(
+            requireContext(),
+            "ca-app-pub-3940256099942544/5224354917",
+            adRequest,
+            object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mRewardedAd = null
+                }
+
+                override fun onAdLoaded(rewardedAd: RewardedAd) {
+                    mRewardedAd = rewardedAd
+
+                    mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdShowedFullScreenContent() {
+                            mRewardedAd = null
+                            initAds() // inisialisasi ads baru setelah selesai menonton reward ads
+                        }
+                    }
+                }
+            })
     }
 
     private fun initObject() {
@@ -105,16 +144,42 @@ class ChatFragment : Fragment() {
         }
 
         binding.ivSend.setOnClickListener {
+            Timber.d("Masuk ivSend = $mRewardedAd")
             val message = binding.etMain.text.toString().trim()
-            if (message.isNotEmpty()) {
+
+            // cek terlebih dahulu apakah message menggandung kata istimewa dari app ini
+            // dan ads tidak di mute
+            if (message.contains("tittle tattle", ignoreCase = true) && !adsPreferences.isMuteAds) {
+                if (mRewardedAd == null) return@setOnClickListener // jangan jalankan apapun jika ads belum siap
+
+                // meminta konfirmasi kepada user.
+                MaterialAlertDialogBuilder(requireContext()).setTitle("Warning")
+                    .setMessage("Anda Menggunakan kata Istimewa dalam kalimat ini, jika ingin menggirim pesan ini anda harus menonton iklan terlebih dahulu")
+                    .setPositiveButton(
+                        "Setuju"
+                    ) { _, _ ->
+                        // jika user setuju maka ads akan ditampilkan
+                        mRewardedAd?.show(requireActivity()) {
+                            // jika reward ads sudah di tonton kirim message yang menggandung kata istimewa tersebut.
+                            sendChat(message)
+                        }
+                    }
+                    .setNegativeButton("Ngamau aku") { _, _ ->
+                        Toast.makeText(requireContext(), "Okela kalau gitu", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    .show()
+            } else // jika tidak menggandung kata istimewa maka langsung kirim isi chat nya
                 sendChat(message)
-                binding.etMain.text.clear()
-                binding.ivSend.isEnabled = false
-            }
         }
     }
 
+    // mengirim chat
     private fun sendChat(message: String) {
+        if (message.isEmpty()) return
+
+        binding.etMain.text.clear()
+        binding.ivSend.isEnabled = false
         val chat = Chat(message, receiverUserId, myUserId, isPending = true)
 
         updatePendingChat(chat)

@@ -22,6 +22,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.latihangoding.tittle_tattle.R
 import com.latihangoding.tittle_tattle.databinding.FragmentLoginBinding
+import com.latihangoding.tittle_tattle.utils.AdsPreferences
 import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
 import com.latihangoding.tittle_tattle.vo.User
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +36,8 @@ class LoginFragment : Fragment() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
+
+    private lateinit var adsPreferences: AdsPreferences
 
     private val loginResult = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -54,6 +57,9 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
+
+        adsPreferences = AdsPreferences(requireContext())
+        binding.switchAds.isChecked = adsPreferences.isMuteAds // set status terakhir ke switch
 
         initObject()
         initListener()
@@ -77,6 +83,10 @@ class LoginFragment : Fragment() {
             googleSignInClient.signOut()
             val signInIntent = googleSignInClient.signInIntent
             loginResult.launch(signInIntent)
+        }
+
+        binding.switchAds.setOnCheckedChangeListener { _, isChecked ->
+            adsPreferences.isMuteAds = isChecked // set status isMute jika checked berubah
         }
     }
 

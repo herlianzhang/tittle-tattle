@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginFragment">
 
+    <Switch
+        android:id="@+id/switch_ads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="24dp"
+        android:text="Mute Ads"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"

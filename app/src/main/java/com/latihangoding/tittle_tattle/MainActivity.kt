@@ -8,15 +8,24 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.google.android.gms.ads.MobileAds
 import com.latihangoding.tittle_tattle.broadcast.AirPlaneReceiver
 import com.latihangoding.tittle_tattle.databinding.ActivityMainBinding
+import com.latihangoding.tittle_tattle.vo.User
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
+
+    private val mainNavController: NavController? by lazy { findNavController(R.id.nav_host_fragment) }
 
 //    objek ketika menerima state airplane mode
     private val airPlaneStateReceiver = object : BroadcastReceiver() {

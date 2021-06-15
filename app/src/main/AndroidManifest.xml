@@ -24,6 +24,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3637424755191825~4606825548"/>
 
+<!--         daftar widget di manifest-->
         <receiver android:name="com.latihangoding.tittle_tattle.MyWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -33,7 +34,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/my_widget_info" />
         </receiver>
-        
+
+<!--        daftar RemoteViewsService di manifest-->
         <service android:name=".WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 

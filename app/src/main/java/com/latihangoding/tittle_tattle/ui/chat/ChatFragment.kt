@@ -26,6 +26,7 @@ import com.latihangoding.tittle_tattle.databinding.FragmentChatBinding
 import com.latihangoding.tittle_tattle.utils.AdsPreferences
 import com.latihangoding.tittle_tattle.utils.FirebaseConfiguration
 import com.latihangoding.tittle_tattle.vo.Chat
+import com.latihangoding.tittle_tattle.vo.User
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -92,7 +93,9 @@ class ChatFragment : Fragment() {
     }
 
     private fun initObject() {
-        val user = args.chatUser
+        val argumentUser = arguments?.getParcelable<User>("data")
+
+        val user = argumentUser ?: args.chatUser
 
         receiverUserId = user.uid.toString()
         Glide.with(requireContext()).load(user.photoUrl).into(binding.ivAvatar)

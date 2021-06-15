@@ -8,10 +8,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.google.android.gms.ads.MobileAds
 import com.latihangoding.tittle_tattle.broadcast.AirPlaneReceiver
 import com.latihangoding.tittle_tattle.databinding.ActivityMainBinding
-import com.latihangoding.tittle_tattle.utils.AdsPreferences
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +33,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        lifecycleScope.launch {
+            val data = intent.getParcelableExtra<User>("data")
+            if (data != null) {
+                delay(1000)
+                mainNavController?.navigate(R.id.chatFragment, Bundle().also {
+                    it.putParcelable("data", data)
+                })
+            }
+        }
 
         // menginisialisasi mobileads
         MobileAds.initialize(this)

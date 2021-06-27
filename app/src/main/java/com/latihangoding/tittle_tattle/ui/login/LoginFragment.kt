@@ -97,7 +97,7 @@ class LoginFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) { // fetch uid user premium
                 val tmp = mutableListOf<String>()
                 for (d in snapshot.children) {
-                    tmp.add(d.getValue(String::class.java) ?: "")
+                    tmp.add(d.key.toString())
                 }
                 premiumUsers = tmp // memasukan data uid user premium ke wadah yang tadi sudah dibuat
             }
